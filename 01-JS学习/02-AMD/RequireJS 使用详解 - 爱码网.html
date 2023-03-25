@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)https://www.likecs.com/show-204296329.html?sc=2360 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="./RequireJS 使用详解 - 爱码网_files/f(4).txt"></script>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <title>RequireJS 使用详解 - 爱码网</title>
+     
+<meta name="keywords" content="RequireJS 使用详解">
+<meta name="description" content="require.js 主要解决两个问题 :
+    1&amp;amp;amp;gt; 实现js文件的异步加载，避免网页失去响应
+　 2&amp;amp;amp;gt; 管理模块之间的依赖性，便于代码的编写和维护
+
+官网 : http://requirejs.org/
+
+GitHub : https://github.com/requirejs/requirejs
+
+
+require.js的加载
+1&amp;amp;amp;gt; 引入 require.js 文件
+&amp;amp;amp;">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="./RequireJS 使用详解 - 爱码网_files/base.css">
+<script src="./RequireJS 使用详解 - 爱码网_files/f(5).txt" id="google_shimpl"></script><script src="./RequireJS 使用详解 - 爱码网_files/detail.min.js.下载"></script>  
+
+<script>
+   $(document).ready(function () { 
+		$("img").error(function () {
+			$(this).hide();
+		}); 
+	}); 
+</script>
+<meta http-equiv="origin-trial" content="A+cA2PUOfIOKAdSDJOW5CP9ZlxONy1yu+hqAq72zUtKw4rLdihqRp6Nui/jUyCyegr+BUtH+C+Elv0ufn05yBQEAAACFeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjY5NzY2Mzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="A+zsdH3aNZT/bkjT8U/o5ACzyaeNYzTvtoVmwf/KOilfv39pxY2AIsOwhQJv+YnXp98i3TqrQibIVtMWs5UHjgoAAACLeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjY5NzY2Mzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="AxceVEhIegcDEHqLXFQ2+vPKqzCppoJYsRCZ/BdfVnbM/sUUF2BXV8lwNosyYjvoxnTh2FC8cOlAnA5uULr/zAUAAACLeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjY5NzY2Mzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><link rel="preload" href="./RequireJS 使用详解 - 爱码网_files/f(6).txt" as="script"><script type="text/javascript" src="./RequireJS 使用详解 - 爱码网_files/f(6).txt"></script><meta http-equiv="origin-trial" content="A+cA2PUOfIOKAdSDJOW5CP9ZlxONy1yu+hqAq72zUtKw4rLdihqRp6Nui/jUyCyegr+BUtH+C+Elv0ufn05yBQEAAACFeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjY5NzY2Mzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="A+zsdH3aNZT/bkjT8U/o5ACzyaeNYzTvtoVmwf/KOilfv39pxY2AIsOwhQJv+YnXp98i3TqrQibIVtMWs5UHjgoAAACLeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjY5NzY2Mzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="AxceVEhIegcDEHqLXFQ2+vPKqzCppoJYsRCZ/BdfVnbM/sUUF2BXV8lwNosyYjvoxnTh2FC8cOlAnA5uULr/zAUAAACLeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjY5NzY2Mzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><link rel="preload" href="./RequireJS 使用详解 - 爱码网_files/f(6).txt" as="script"><script type="text/javascript" src="./RequireJS 使用详解 - 爱码网_files/f(6).txt"></script></head>
+<body class="home-template dtpg">
+<nav class="main-nav clearfix">
+    <div class="inner">
+        <ul class="nav">
+            <li class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-886"><a href="https://www.likecs.com/" title="爱码网">首页</a></li>
+                        <li class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-886"><a href="https://www.likecs.com/nav/1.html" title="前端技术">前端技术</a></li>
+                        <li class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-886"><a href="https://www.likecs.com/nav/9.html" title="编程语言">编程语言</a></li>
+                        <li class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-886"><a href="https://www.likecs.com/nav/31.html" title="人工智能">人工智能</a></li>
+                        <li class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-886"><a href="https://www.likecs.com/nav/41.html" title="运维知识">运维知识</a></li>
+                        <li class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-886"><a href="https://www.likecs.com/nav/52.html" title="资源下载">资源下载</a></li>
+                        <li class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-886"><a href="https://www.likecs.com/nav/68.html" title="常用小工具">常用小工具</a></li>
+                        <li class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-886"><a href="https://www.likecs.com/nav/72.html" title="技术问答">技术问答</a></li>
+                    </ul>            
+	 
+    </div>
+</nav><div class="site-wrapper">
+ 
+    <header style="height: auto;padding: 10px 0px;" class="main-header">
+        <div style="max-width:910px" class="main-header-content inner">
+                        <h1 class="page-title"><a href="https://www.likecs.com/show-204296329.html" title="RequireJS 使用详解">RequireJS 使用详解</a></h1>
+            
+        </div>
+
+    </header>
+    <main class="content" role="main" style="height: auto !important;">
+	
+
+        <div class="leftbox" style="height: auto !important;">
+    <article class="post tag-uifont tag-webview" style="height: auto !important;">
+        <header class="post-header">
+            <footer class="tc">  
+                <time class="post-date" datetime="2021-11-09">2021-11-09</time>
+            </footer>
+        </header>
+        <section class="post-content">
+            <div class="contentbef"><!--likecs_hengxiang_zishiying--><ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-5446233687289962" data-ad-slot="2607637140" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done"><div id="aswift_5_host" style="border: none; height: 280px; width: 653px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;"></div></ins>  
+                                    
+                            </div>
+
+                            <div>require.js 主要解决两个问题 :</div>
+<div>&nbsp; &nbsp; 1&gt; 实现js文件的异步加载，避免网页失去响应</div>
+<div>　 2&gt; 管理模块之间的依赖性，便于代码的编写和维护</div>
+<div><br></div>
+<div>官网 :&nbsp;<a href="http://requirejs.org/" rel="nofollow" target="_blank">http://requirejs.org/</a>
+</div>
+<div>GitHub :&nbsp;<a href="https://github.com/requirejs/requirejs" rel="nofollow" target="_blank">https://github.com/requirejs/requirejs</a>
+</div>
+<div><br></div>
+<div><span style="font-size:18px;">require.js的加载</span></div>
+<div>1&gt; 引入&nbsp;require.js 文件</div>
+<div>&lt;script src="js/require.js" async="true" defer&gt;&lt;/script&gt;</div>
+<div>async属性表明这个文件需要异步加载，避免网页失去响应。IE不支持这个属性，只支持defer，所以把defer也写上</div>
+<div>2&gt; 加载自己的 js 文件</div>
+<div>&lt;script src="js/require.js" data-main="js/main"&gt;&lt;/script&gt;</div>
+<div>data-main属性的作用是，指定网页程序的主模块。在上例中，就是js目录下面的main.js，这个文件会第一个被require.js加载。由于require.js默认的文件后缀名是js，所以可以把main.js简写成main</div>
+<div><br></div>
+<div>主模块是整个网页的入口代码，它有点像C语言的main()函数，所有代码都从这儿开始运行</div>
+<div><br></div>
+<div><span style="font-size:18px;">主模块的写法</span></div>
+<div>主模块不依赖任何其他模块，那么可以直接写入javascript代码</div>
+<div><span style="color:rgb(0,143,0);">// main.js</span></div>
+<div>alert("加载成功！");</div>
+<div><br></div>
+<div>常见的情况是，主模块依赖于其它模块，这时就要使用AMD规范定义的的require()函数</div>
+<div><span style="color:rgb(0,143,0);">// main.js</span></div>
+<div>require(['moduleA', 'moduleB', 'moduleC'], function (moduleA, moduleB, moduleC){</div>
+<div>&nbsp; &nbsp; <span style="color:rgb(0,143,0);">// some code here</span>
+</div>
+<div>});</div>
+<div>require()函数接受两个参数。第一个参数是一个数组，表示所依赖的模块，上例就是['moduleA', 'moduleB', 'moduleC']，即主模块依赖这三个模块；第二个参数是一个回调函数，当前面指定的模块都加载成功后，它将被调用。加载的模块会以参数形式传入该函数，从而在回调函数内部就可以使用这些模块</div>
+<div>require()异步加载moduleA，moduleB和moduleC，浏览器不会失去响应；它指定的回调函数，只有前面的模块都加载成功后，才会运行，解决了依赖性的问题</div>
+<div>
+<span style="color:rgb(255,38,0);">注 :</span> <span style="color:rgb(255,38,0);">
+默认情况下，require.js与这三个模块在同一个目录，其对应&nbsp;</span><span style="color:rgb(255,38,0);">moduleA.js，moduleB</span><span style="color:rgb(255,38,0);">.js&nbsp;</span><span style="color:rgb(255,38,0);">和 moduleC</span><span style="color:rgb(255,38,0);">.js，然后自动加载</span>
+</div>
+<div><br></div>
+<div><span style="font-size:18px;">模块的加载</span></div>
+<div>使用 require.config()方法，可以对模块的加载行为进行自定义。require.config()就写在主模块 (main.js) 的头部。参数就是一个对象，这个对象的paths属性指定各个模块的加载路径</div>
+<div>require.config({</div>
+<div>&nbsp; &nbsp; paths: {</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:rgb(0,143,0);">//&nbsp;baseUrl: "js/lib", 指定基目录</span>
+</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;"backbone": "backbone.min",</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; "jquery": "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min”,
+<span style="color:rgb(0,143,0);">//&nbsp;直接指定网址</span>
+</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; "underscore": "lib/underscore.min",</div>
+<div>&nbsp; &nbsp; }</div>
+<div>});</div>
+<div>require.js要求，每个模块是一个单独的js文件，可以使用&nbsp;require.js 优化工具将多模块合并</div>
+<div><br></div>
+<div><span style="font-size:18px;">define 函数</span></div>
+<div>模块不同于传统的脚本文件，它良好地定义了一个作用域来避免全局名称空间污染。它可以显式地列出其依赖关系，并以函数 (定义此模块的那个函数) 参数的形式将这些依赖进行注入，而无需引用全局变量。RequireJS的模块是模块模式的一个扩展，其好处是无需全局地引用其他模块。 RequireJS的模块语法允许它尽快地加载多个模块，虽然加载的顺序不定，但依赖的顺序最终是正确的。同时因为无需创建全局变量，甚至可以做到在同一个页面上同时加载同一模块的不同版本</div>
+<div><br></div>
+<div>在定义一个模块的时候，方法的第一行写一个 “use strict”，用于表示&nbsp;严格模式，这种模式使得 JavaScript 在更严格的条件下运行，其优点 :</div>
+<div>1&gt; 消除Javascript语法的一些不合理、不严谨之处，减少一些怪异行为</div>
+<div>2&gt; 消除代码运行的一些不安全之处，保证代码运行的安全</div>
+<div>3&gt; 提高编译器效率，增加运行速度</div>
+<div><br></div>
+<div>1&gt; 简单的值对模块 :&nbsp;把文件名称作为name参数传入，若依赖该组件那么返回的就是一个对</div>
+<div><span style="font-family:Menlo;font-size:10px;">define({</span></div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>name</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"hehe"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div>
+<span style="font-size:10px;font-family:Menlo;">&nbsp;&nbsp;&nbsp;</span> <span style="font-size:10px;color:rgb(102,14,122);font-family:Menlo;">
+<strong>age</strong></span><span style="font-size:10px;font-family:Menlo;">:</span>
+<span style="font-size:10px;color:rgb(0,128,0);font-family:Menlo;"><strong>"18"</strong></span>
+</div>
+<div><span style="font-size:10px;font-family:Menlo;">});</span></div>
+<div>2&gt;&nbsp;简单的函数模块 :&nbsp;和上面一样文件名称作为默认的 name，与上面的差异是，可以提前执行返回值外的代码</div>
+<div>
+<span style="font-size:10px;font-family:Menlo;">define(</span><span style="font-size:10px;color:rgb(0,0,128);font-family:Menlo;"><strong>function</strong></span>
+<span style="font-size:10px;font-family:Menlo;">() {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>return</strong></span> <span style="font-size:10px;">{</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>name</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"hehe"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>age</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"18"</strong></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>&nbsp;&nbsp;&nbsp;</strong></span>
+<span style="font-size:10px;">};</span>
+</div>
+<div><span style="font-family:Menlo;font-size:10px;">});</span></div>
+<div>3&gt;&nbsp;依赖函数模块 :&nbsp;和上面一样，关键是依赖模块是以返回值作为入参的形式传入，如果加载错误或者没有找到对应的模块，那么得到的入参是Undefiend</div>
+<div><span style="font-family:Menlo;font-size:10px;">define([</span></div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'angular'</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'jsUtil'</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'modules/meet/modules'</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'modules/meet/services/Meet'</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'modules/meet/services/MeetRemoteService'</strong></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">],</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>function</strong></span> <span style="font-size:10px;">(require) {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'use strict'</strong></span><span style="font-size:10px;">;</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>var</strong></span> <span style="color:rgb(69,131,131);font-size:10px;">module</span>
+<span style="font-size:10px;">= angular.module(</span><span style="color:rgb(0,128,0);font-size:10px;"><strong>'meet.services'</strong></span><span style="font-size:10px;">);</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(69,131,131);font-size:10px;">
+module</span><span style="font-size:10px;">.factory(</span><span style="color:rgb(0,128,0);font-size:10px;"><strong>'MeetService'</strong></span><span style="font-size:10px;">,</span>
+<span style="color:rgb(0,0,128);font-size:10px;"><strong>function</strong></span>
+<span style="font-size:10px;">(Meet, MeetRemoteService) {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>var</strong></span> <span style="color:rgb(69,131,131);font-size:10px;">service</span>
+<span style="font-size:10px;">= {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>name</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'hehe'</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>age</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'18'</strong></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></span>
+<span style="font-size:10px;">};</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>return</strong></span> <span style="color:rgb(69,131,131);font-size:10px;">
+service</span><span style="font-size:10px;">;</span>
+</div>
+<div style="font-family:Menlo;"><span style="font-size:10px;">&nbsp;&nbsp;&nbsp; });</span></div>
+<div><span style="font-family:Menlo;font-size:10px;">});</span></div>
+<div>4&gt;&nbsp;返回函数模块 :&nbsp;和上面一样，这里返回的是函数，在依赖模块中把它作为函数对象调用即可，其实这是一个简单的闭包</div>
+<div><span style="font-family:Menlo;font-size:10px;">define([</span></div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'angular'</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'jsUtil'</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'modules/meet/modules'</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'modules/meet/services/Meet'</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'modules/meet/services/MeetRemoteService'</strong></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">],</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>function</strong></span> <span style="font-size:10px;">(require) {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>'use strict'</strong></span><span style="font-size:10px;">;</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>var</strong></span> <span style="color:rgb(69,131,131);font-size:10px;">module</span>
+<span style="font-size:10px;">= angular.module(</span><span style="color:rgb(0,128,0);font-size:10px;"><strong>'meet.services'</strong></span><span style="font-size:10px;">);</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(69,131,131);font-size:10px;">
+module</span><span style="font-size:10px;">.factory(</span><span style="color:rgb(0,128,0);font-size:10px;"><strong>'MeetService'</strong></span><span style="font-size:10px;">,</span>
+<span style="color:rgb(0,0,128);font-size:10px;"><strong>function</strong></span>
+<span style="font-size:10px;">(Meet, MeetRemoteService) {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>var</strong></span> <span style="color:rgb(69,131,131);font-size:10px;">service</span>
+<span style="font-size:10px;">= {};</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(69,131,131);font-size:10px;">
+service</span><span style="font-size:10px;">.</span><span style="color:rgb(122,122,67);font-size:10px;">getWeekOfMeet</span>
+<span style="font-size:10px;">=</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>function</strong></span> <span style="font-size:10px;">(weekFlag, date) {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>return</strong></span> <span style="font-size:10px;">MeetRemoteService.</span><span style="color:rgb(122,122,67);font-size:10px;">get</span><span style="font-size:10px;">(weekFlag, date).</span><span style="color:rgb(102,14,122);font-size:10px;"><strong>then</strong></span><span style="font-size:10px;">(</span><span style="color:rgb(0,0,128);font-size:10px;"><strong>function</strong></span>
+<span style="font-size:10px;">(data) {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data.</span><span style="color:rgb(102,14,122);font-size:10px;"><strong>content</strong></span>
+<span style="font-size:10px;">= Meet.sortMeet(data.</span><span style="color:rgb(102,14,122);font-size:10px;"><strong>content</strong></span><span style="font-size:10px;">);</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span style="color:rgb(0,0,128);font-size:10px;"><strong>return</strong></span> <span style="font-size:10px;">
+data;</span>
+</div>
+<div style="font-family:Menlo;"><span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</span></div>
+<div style="font-family:Menlo;"><span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</span></div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>return</strong></span> <span style="color:rgb(69,131,131);font-size:10px;">
+service</span><span style="font-size:10px;">;</span>
+</div>
+<div style="font-family:Menlo;"><span style="font-size:10px;">&nbsp;&nbsp;&nbsp; });</span></div>
+<div><span style="font-family:Menlo;font-size:10px;">});</span></div>
+<div>5&gt;&nbsp;完整定义 : 下面就是完整定义，有名称，有依赖，有回调，内部还有common 的形式引入依赖对象</div>
+<div>
+<span style="font-size:10px;font-family:Menlo;">define(</span><span style="font-size:10px;color:rgb(0,128,0);font-family:Menlo;"><strong>'sample3'</strong></span><span style="font-size:10px;font-family:Menlo;">, [</span><span style="font-size:10px;color:rgb(0,128,0);font-family:Menlo;"><strong>'sample'</strong></span><span style="font-size:10px;font-family:Menlo;">,</span>
+<span style="font-size:10px;color:rgb(0,128,0);font-family:Menlo;"><strong>'sample1'</strong></span><span style="font-size:10px;font-family:Menlo;">],</span>
+<span style="font-size:10px;color:rgb(0,0,128);font-family:Menlo;"><strong>function</strong></span>
+<span style="font-size:10px;font-family:Menlo;">(sample, sample1) {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>var</strong></span> <span style="color:rgb(69,131,131);font-size:10px;">sample4</span>
+<span style="font-size:10px;">= require(</span><span style="color:rgb(0,128,0);font-size:10px;"><strong>'sample4'</strong></span><span style="font-size:10px;">);</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,0,128);font-size:10px;">
+<strong>return function</strong></span> <span style="font-size:10px;">() {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(122,122,67);font-size:10px;">
+alert</span><span style="font-size:10px;">(sample.</span><span style="color:rgb(102,14,122);font-size:10px;"><strong>name</strong></span>
+<span style="font-size:10px;">+</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>':'</strong></span> <span style="font-size:10px;">+ sample.sayhell());</span>
+</div>
+<div style="font-family:Menlo;"><span style="font-size:10px;">&nbsp;&nbsp;&nbsp; }</span></div>
+<div><span style="font-family:Menlo;font-size:10px;">});</span></div>
+<div><br></div>
+<div>define函数 name 和 require函数 依赖名称之间的关系</div>
+<div>define(name, [], callback) : 这个name可以省掉，默认是文件名称；当然也可以自定义，一旦定义name，根据源代码可以发现 define函数内部其实就是把这个 name以及依赖模块、回调函数作为一个对象存储在全局的数组当中，也就是 defQueue.push([name, deps, callback])；那么这个name就是这个组件注册的的ID</div>
+<div><br></div>
+<div>require([name, name2], callback) : 系统首先会在全文检索path中是否对应的路径，如果没有自然把他作为路径拼接在 baseUrl 上去异步加载这个js文件，加载时从源代码中可以看到 ,var data = getScriptData(evt)；返回的 data.id 其实就是name，然后执行contex.completeLoad(node.id)，其内部就很清楚了，把define中注册的name和这里得到的name进行比较如果相等就执行。所以道理就是：require
+和 define 的 name 必须保证一致</div>
+<div><br></div>
+<div><span style="font-size:18px;">AMD模块的写法</span></div>
+<div>require.js加载的模块，采用AMD规范，也就是说，模块必须按照AMD的规定来写。具体来说，模块必须采用特定的define()函数来定义。如果一个模块不依赖其他模块，那么可以直接定义在define()函数之中，如下代码 :</div>
+<div><span style="color:rgb(0,143,0);">// math.js</span></div>
+<div>define(function (){</div>
+<div>&nbsp; &nbsp; var add = function (x,y){</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; return x+y;</div>
+<div>&nbsp; &nbsp; };</div>
+<div>&nbsp; &nbsp; return { add: add };</div>
+<div>});</div>
+<div>加载方法如下 :</div>
+<div><span style="color:rgb(0,143,0);">// main.js</span></div>
+<div>require(['math'], function (math){</div>
+<div>&nbsp; &nbsp; alert(math.add(1,1));</div>
+<div>});</div>
+<div><br></div>
+<div>如果这个模块还依赖其它模块，那么define()函数的第一个参数，必须是一个数组，指明该模块的依赖性 :</div>
+<div>define(['myLib'], function(myLib){</div>
+<div>&nbsp; &nbsp; function foo(){</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; myLib.doSomething();</div>
+<div>&nbsp; &nbsp; }</div>
+<div>　return { foo : foo };</div>
+<div>});</div>
+<div>当require()函数加载上面这个模块的时候，就会先加载myLib.js文件</div>
+<div><span style="color:rgb(255,38,0);">注 : 1&gt; jQuery 符合 AMD规范</span></div>
+<div>
+<span style="color:rgb(255,38,0);">&nbsp; &nbsp; &nbsp; &nbsp;2&gt; 每个文件只能有一个&nbsp;</span><span style="color:rgb(255,38,0);">define 方法，且&nbsp;</span><span style="color:rgb(255,38,0);">define 方法定义的 Module 与文件名称相同</span>
+</div>
+<div><br></div>
+<div><span style="font-size:18px;">加载非规范的模块</span></div>
+<div>在加载非规范的模块调用 require() 加载之前，要先用 require.config()方法，定义一些特征，如下代码 :</div>
+<div>require.config({</div>
+<div>&nbsp; &nbsp; baseUrl: '/public/js',</div>
+<div>&nbsp; &nbsp; paths: {</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; jquery: 'lib/jquery/jquery'</div>
+<div>&nbsp; &nbsp; },</div>
+<div>&nbsp; &nbsp; shim : {</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; 'underscore' : {</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; exports : '_'</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; },</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; 'backbone' : {</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; deps : ['underscore', 'jquery'],</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; exports : 'Backbone'</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; },</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; 'jquery.scroll' : {</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; deps : ['jquery'],</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; exports : 'jQuery.fn.scroll'</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; },</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; 'hello' : {</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; init : function() {</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return {</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hello: hello,</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hello2: hello2</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; }</div>
+<div>&nbsp; &nbsp; }</div>
+<div>});</div>
+<div>require(['hello'], function(hello) {</div>
+<div>&nbsp;&nbsp;hello.hello1();</div>
+<div>&nbsp;&nbsp;hello.hello2();</div>
+<div>});</div>
+<div>require.config() 接受一个配置对象，这个对象除了有前面说过的paths属性之外，还有一个shim属性，专门用来配置不兼容的模块。具体来说，每个模块要定义</div>
+<div>&nbsp; &nbsp; 1&gt; exports值 (输出的变量名)，表明这个模块外部调用时的名称</div>
+<div>&nbsp; &nbsp; 2&gt; deps数组，表明该模块的依赖性</div>
+<div><br></div>
+<div>使用 shim ，将某个依赖中的某个全局变量暴露给requirejs，当作这个模块本身的引用</div>
+<div><br></div>
+<div><span style="color:rgb(255,38,0);">注 : 1&gt; require.config 配置 shim 中 exports 的值，一定要与相关文件中暴露出全局变量名称一致。如果暴露出多个全局变量，那么 exports 可以指定其中任何一个，作为模块的返回结果。***只使用一个全局变量，来减少冲突的可能性</span></div>
+<div>
+<span style="color:rgb(255,38,0);">&nbsp; &nbsp; &nbsp; &nbsp;2&gt; 若要暴露多个变量则不能使用&nbsp;</span><span style="color:rgb(255,38,0);">exports，必须换成 init 函数</span>
+</div>
+<div><br></div>
+<div>requirejs一共提供了两个全局变量 :</div>
+<div>1&gt;&nbsp;requirejs/require : 用来配置requirejs及载入入口模块，如果其中一个命名被其它库使用了，可以用另一个</div>
+<div>2&gt;&nbsp;define : 定义一个模块</div>
+<div><br></div>
+<div><span style="color:rgb(255,38,0);">注 : 1&gt; 当一个 js 文件已经和一个模块绑定，当该 js 再次绑定一个模块使用的时候会报错</span></div>
+<div>
+<span style="color:rgb(255,38,0);">&nbsp; &nbsp; &nbsp; &nbsp;2&gt; 对于经常使用的模块，在&nbsp;</span><span style="color:rgb(255,38,0);">require.config 中设置成有主，这样防止多次引入</span>
+</div>
+<div><br></div>
+<div>如何完全不让jquery污染全局的$</div>
+<div><br></div>
+<div><span style="font-size:18px;">require.js 插件</span></div>
+<div>1&gt; domready插件 :&nbsp;让回调函数在页面DOM结构加载完成后再运行</div>
+<div>require(['domready!'], function (doc) {</div>
+<div>&nbsp; &nbsp; // called once the DOM is ready</div>
+<div>});</div>
+<div><br></div>
+<div>2&gt;&nbsp;text和image插件 :&nbsp;允许require.js加载文本和图片文件</div>
+<div>define([</div>
+<div>&nbsp; &nbsp; 'text!review.txt’,</div>
+<div>&nbsp; &nbsp; 'image!cat.jpg’</div>
+<div>&nbsp; &nbsp; ],</div>
+<div>&nbsp; &nbsp; function(review, cat){</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; console.log(review);</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; document.body.appendChild(cat);</div>
+<div>&nbsp; &nbsp; }</div>
+<div>);</div>
+<div><br></div>
+<div><span style="font-size:18px;">合并与压缩</span></div>
+<div>RequireJS&nbsp;可以将 JavaScript代码轻易的分割成苦干个模块(module)并且保持你的代码模块化与易维护性。这样，将获得一些具有互相依赖关系的 JavaScript文件。仅仅需要在的HTML文档中引用一个基于 RequireJS 的脚本文件，所有必须的文件都将会被自动引用到这个页面上</div>
+<div>但是，在生产环境中将所有的 JavaScript文件分离，这是一个不好的做法。这会导致很多次请求(requests)，即使这个些文件都很小，也会浪费很多时间。 可以通过合并这些脚本文件，以减少请求的次数达到节省加载时间的目的</div>
+<div>另一种节省加载时间的技巧是缩小这些被加载文件的大小，相对小一些的文件会传输的更快一些。这个过程叫作最小化 (minification) ，它是通过小心的改变脚本文件的代码结构并且不改变代码的形为(behavior)和功能(functionality)来实现的。例如这些：去除不必要的空格，缩短(mangling，或都压缩)变量(variables)名与函数(methods，或者叫方法)名，等等。这种合并并压缩文件的过程叫做代码优化( optimization)。这种方法除了用于优化(optimization)JavaScript文件，同样适用于CSS文件的优化</div>
+<div>RequireJS有两个主要方法(method): define()和require()。这两个方法基本上拥有相同的定义(declaration) 并且它们都知道如何加载的依赖关系，然后执行一个回调函数(callback function)。与require()不同的是， define()用来存储代码作为一个已命名的模块。 因此define()的回调函数需要有一个返回值作为这个模块定义。这些类似被定义的模块叫作AMD (Asynchronous Module Definition，异步模块定义)</div>
+<div><br></div>
+<div>使用 RequireJS Optimizer(RequireJS优化器) 来压缩优化项目</div>
+<div>RequireJS Optimizer 依赖于 node.js 可以在&nbsp;<a href="https://nodejs.org/" rel="nofollow" target="_blank">https://nodejs.org/</a>&nbsp;下载</div>
+<div>1&gt; 去&nbsp;<a href="http://requirejs.org/docs/optimization.html#download" rel="nofollow">http://requirejs.org/docs/optimization.html#download</a>&nbsp;下载 r.js</div>
+<div>2&gt; 进入到工程 &lt;root&gt; 目录，并执行压缩指令</div>
+<div>
+<span style="color:rgb(4,51,255);">$ cd&nbsp;/Users/mew/Desktop/AllMyFile/CompanyReposity/Study/Webstorm/Test1/js</span> &nbsp; &nbsp;<span style="color:rgb(0,143,0);">## 进入到项目根目录</span>
+</div>
+<div>
+<span style="color:rgb(4,51,255);">$&nbsp;&nbsp;node /Users/mew/Desktop/r.js -o build.js</span> &nbsp; &nbsp;<span style="color:rgb(0,143,0);">## 编译项目</span>
+</div>
+<div><br></div>
+<div>build.js 文件中的内容&nbsp;</div>
+<div><span style="font-family:Menlo;font-size:10px;">({</span></div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>appDir</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"./"</strong></span><span style="font-size:10px;">,</span> <span style="color:rgb(128,128,128);font-size:10px;">
+<em>// 应用程序的目录（即&lt;root&gt;），在这个文件夹下的所有文件将会被复制到dir参数标注的文件夹下</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;</em></span>
+<span style="color:rgb(102,14,122);font-size:10px;"><strong>baseUrl</strong></span><span style="font-size:10px;">:</span>
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>"./"</strong></span><span style="font-size:10px;">,</span>
+<span style="color:rgb(128,128,128);font-size:10px;"><em>// 存放模块的根目录，相对于appDir，代表查找文件的锚点(that represents the anchor path for finding files)</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;</em></span>
+<span style="color:rgb(102,14,122);font-size:10px;"><strong>dir</strong></span><span style="font-size:10px;">:</span>
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>"./dist"</strong></span><span style="font-size:10px;">,</span>
+<span style="color:rgb(128,128,128);font-size:10px;"><em>// 输出目录，所有的应用程序文件将会被复制到该文件夹下</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;</em></span>
+<span style="color:rgb(102,14,122);font-size:10px;"><strong>modules</strong></span><span style="font-size:10px;">: [</span>
+<span style="color:rgb(128,128,128);font-size:10px;"><em>// 一个包含多个对象的数组，每个对象代表一个将被优化的模块(module)</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em></span>
+<span style="font-size:10px;">{</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>name</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"main"</strong></span> <span style="color:rgb(128,128,128);font-size:10px;">
+<em>// 模块的入口文件</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em></span>
+<span style="font-size:10px;">}</span>
+</div>
+<div style="font-family:Menlo;"><span style="font-size:10px;">&nbsp;&nbsp;&nbsp; ],</span></div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(128,128,128);font-size:10px;">
+<em>// fileExclusionRegExp: /^(r|build)\.js$/, // 任何与此规则匹配的文件或文件夹都将不会被复制到输出目录。由于我们把r.js和build.js放置在应用程序目录下。若希望优化器（optimizer）排除这两个文件，因此可以这样设置/^(r|build)\.js$/</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;</em></span>
+<span style="color:rgb(102,14,122);font-size:10px;"><strong>optimizeCss</strong></span><span style="font-size:10px;">:</span>
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>"standard"</strong></span><span style="font-size:10px;">,</span>
+<span style="color:rgb(128,128,128);font-size:10px;"><em>// RequireJS Optimizer会自动优化应用程序下的CSS文件。这个参数控制CSS最优化设置。允许的值： “none”, “standard”, “standard.keepLines”, “standard.keepComments”, “standard.keepComments.keepLines”</em></span>
+</div>
+<div style="font-family:Menlo;"><span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp; // removeCombined: true, // 如果为true，优化器(optimizer)将从输出目录中删除已合并的文件</em></span></div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;</em></span>
+<span style="color:rgb(102,14,122);font-size:10px;"><strong>paths</strong></span><span style="font-size:10px;">: {</span>
+<span style="color:rgb(128,128,128);font-size:10px;"><em>// 模块(modules)的相对目录，和&nbsp;</em></span><span style="color:rgb(128,128,128);font-size:10px;"><em>require.config 中的 paths 蕾丝</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em></span>
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>"angular"</strong></span><span style="font-size:10px;">:</span>
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>"../lib/angular/angular"</strong></span><span style="font-size:10px;">,</span>
+<span style="color:rgb(128,128,128);font-size:10px;"><em>// 左边的是 module名称，右边的是路径</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em></span>
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>"angular-animate"</strong></span><span style="font-size:10px;">:</span>
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>"../lib/angular/angular-animate"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"angular-touch"</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"../lib/angular/angular-touch"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"angular-cookies"</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"../lib/angular/angular-cookies"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"ui-router"</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"../lib/angular-ui/angular-ui-router"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"ui-bootstrap"</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"../lib/angular-ui/ui-bootstrap-tpls-2.5.0"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"ng-file-upload"</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"../lib/ng-upload/ng-file-upload.min"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"hammer"</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"../lib/hammer/hammer.min"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"ctrls"</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"../js/ctrls"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"services"</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"../js/services"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"directives"</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"../js/directives"</strong></span><span style="font-size:10px;">,</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"filters"</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"../js/filters"</strong></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>&nbsp;&nbsp;&nbsp;</strong></span>
+<span style="font-size:10px;">},</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>shim</strong></span><span style="font-size:10px;">: {</span> <span style="color:rgb(128,128,128);font-size:10px;">
+<em>// 为那些没有使用define()声名依赖关系及设置模块值的模块，配置依赖关系与“浏览器全局”出口的脚本</em></span><span style="color:rgb(128,128,128);font-size:10px;"><em>，和&nbsp;</em></span><span style="color:rgb(128,128,128);font-size:10px;"><em>require.config 中的 shim 类似</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em></span>
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>"angular"</strong></span><span style="font-size:10px;">: {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>exports</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"angular"</strong></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></span>
+<span style="font-size:10px;">},</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"angular-animate"</strong></span><span style="font-size:10px;">: {</span> <span style="color:rgb(128,128,128);font-size:10px;">
+<em>// 原模块名称</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em></span>
+<span style="color:rgb(102,14,122);font-size:10px;"><strong>deps</strong></span><span style="font-size:10px;">: [</span><span style="color:rgb(0,128,0);font-size:10px;"><strong>"angular"</strong></span><span style="font-size:10px;">],</span>
+<span style="color:rgb(128,128,128);font-size:10px;"><em>// 当前模块的依赖性</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em></span>
+<span style="color:rgb(102,14,122);font-size:10px;"><strong>exports</strong></span><span style="font-size:10px;">:</span>
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>"angular-animate"</strong></span>
+<span style="color:rgb(128,128,128);font-size:10px;"><em>// 模块外部调用时的名称</em></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(128,128,128);font-size:10px;"><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em></span>
+<span style="font-size:10px;">},</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"angular-touch"</strong></span><span style="font-size:10px;">: {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>deps</strong></span><span style="font-size:10px;">: [</span><span style="color:rgb(0,128,0);font-size:10px;"><strong>"angular"</strong></span><span style="font-size:10px;">],</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>exports</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"angular-touch"</strong></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></span>
+<span style="font-size:10px;">},</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"angular-cookies"</strong></span><span style="font-size:10px;">: {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>deps</strong></span><span style="font-size:10px;">: [</span><span style="color:rgb(0,128,0);font-size:10px;"><strong>"angular"</strong></span><span style="font-size:10px;">],</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>exports</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"angular-cookies"</strong></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></span>
+<span style="font-size:10px;">},</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"ui-router"</strong></span><span style="font-size:10px;">: {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>deps</strong></span><span style="font-size:10px;">: [</span><span style="color:rgb(0,128,0);font-size:10px;"><strong>"angular"</strong></span><span style="font-size:10px;">],</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>exports</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"angular-ui"</strong></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></span>
+<span style="font-size:10px;">},</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"ui-bootstrap"</strong></span><span style="font-size:10px;">: {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>deps</strong></span><span style="font-size:10px;">: [</span><span style="color:rgb(0,128,0);font-size:10px;"><strong>"angular"</strong></span><span style="font-size:10px;">,</span>
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>"angular-animate"</strong></span><span style="font-size:10px;">],</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>export</strong></span><span style="font-size:10px;">:</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"ui-bootstrap"</strong></span>
+</div>
+<div style="font-family:Menlo;">
+<span style="color:rgb(0,128,0);font-size:10px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></span>
+<span style="font-size:10px;">},</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(0,128,0);font-size:10px;">
+<strong>"ng-file-upload"</strong></span><span style="font-size:10px;">: {</span>
+</div>
+<div style="font-family:Menlo;">
+<span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span style="color:rgb(102,14,122);font-size:10px;">
+<strong>deps</strong></span><span style="font-size:10px;">: [</span><span style="color:rgb(0,128,0);font-size:10px;"><strong>"angular"</strong></span><span style="font-size:10px;">]</span>
+</div>
+<div style="font-family:Menlo;"><span style="font-size:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</span></div>
+<div style="font-family:Menlo;"><span style="font-size:10px;">&nbsp;&nbsp;&nbsp; }</span></div>
+<div style="font-family:Menlo;"><span style="font-size:10px;">})</span></div>
+<div><br></div>
+<div>目录结构截图</div>
+<div>
+<img src="./RequireJS 使用详解 - 爱码网_files/img" alt="RequireJS 使用详解" title="RequireJS 使用详解"><br>
+</div>
+<div><br></div>            
+                <div style="margin-top: 10px;">
+                  </div> 
+        <p style="padding: 20px;color: #cacaca;">原文链接：来源网络，如有侵犯到您的权益请联系zengyin969@gmail.com进行下架处理</p></section>
+	 
+        <footer class="post-footer" style="margin: 1em; padding: 1em; height: auto !important;"><div style="width:100%;height:auto; background-color: #ddd; text-align: center; padding: 0px;"><ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-5446233687289962" data-ad-slot="2607637140" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done" data-ad-status="filled"><div id="aswift_6_host" style="border: none; height: 280px; width: 651px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block; overflow: visible;" tabindex="0" title="Advertisement" aria-label="Advertisement"><iframe id="aswift_6" name="aswift_6" style="left:0;position:absolute;top:0;border:0;width:651px;height:280px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="651" height="280" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" src="./RequireJS 使用详解 - 爱码网_files/ads.html" data-google-container-id="a!7" data-google-query-id="CM_jpqza5voCFVJCiwodaugM_A" data-load-complete="true"></iframe></div></ins></div>
+            <section class="author">
+                <p>分类：</p>
+                                <p>技术点：</p>
+                            </section>
+        </footer>
+        <p class="mt10">相关文章：</p>
+        <div style="width: 100%;" class="contentcard">
+      
+            <div style="width: 100%;height: auto;" class="carditem litem clearfix"> 
+                    <ul style="padding-left: 0rem;" class="cardcont">
+                                                    <li>
+                                <a title="RequireJS" href="https://www.likecs.com/show-307395596.html" target="_blank"><em>RequireJS</em></a> 
+                                <span>2021-10-27</span>
+                            </li>
+                                                        <li>
+                                <a title="requirejs" href="https://www.likecs.com/show-307327037.html" target="_blank"><em>requirejs</em></a> 
+                                <span>2022-01-02</span>
+                            </li>
+                                                        <li>
+                                <a title="RequireJs入门和进阶教程
+    
+
+
+
+
+RequireJS入门（一）
+RequireJS入门（二）
+RequireJS入门（三）
+RequireJS 2.0 正式发布
+RequireJS进阶（一）
+RequireJS进阶（二）
+RequireJS进阶（三）" href="https://www.likecs.com/show-307049744.html" target="_blank"><em>RequireJs</em>入门和进阶教程
+    
+
+
+
+
+<em>RequireJS</em>入门（一）
+<em>RequireJS</em>入门（二）
+<em>RequireJS</em>入门（三）
+<em>RequireJS</em> 2.0 正式发布
+<em>RequireJS</em>进阶</a> 
+                                <span>2021-07-14</span>
+                            </li>
+                                                        <li>
+                                <a title="RequireJS模块化编程详解" href="https://www.likecs.com/show-204101931.html" target="_blank"><em>RequireJS</em>模块化编程<em>详解</em></a> 
+                                <span>2021-06-18</span>
+                            </li>
+                                                        <li>
+                                <a title="RequireJS使用注意地方" href="https://www.likecs.com/show-203696197.html" target="_blank"><em>RequireJS</em><em>使用</em>注意地方</a> 
+                                <span>2021-12-30</span>
+                            </li>
+                                                        <li>
+                                <a title="RequireJs使用快速入门" href="https://www.likecs.com/show-305612020.html" target="_blank"><em>RequireJs</em><em>使用</em>快速入门</a> 
+                                <span>2021-06-17</span>
+                            </li>
+                                                </ul>
+               </div>   
+         </div>
+    </article>
+
+  
+
+</div>
+
+<div class="rigthbox contentcard mt10" style="height: auto !important;"><div style="height: auto;margin: 33px auto;background-color: #ddd;text-align: center;" class="carditem litem"><ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-5446233687289962" data-ad-slot="2607637140" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done"><div id="aswift_3_host" style="border: none; height: 280px; width: 446px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;"></div></ins></div>
+ 
+          <div style="height: auto;" class="carditem litem">
+    <div class="cardtit">猜你喜欢 </div>
+        <ul class="cardcont">
+                                 <li>
+                    <a title="requireJs使用" href="https://www.likecs.com/show-8403.html" target="_blank"><em>requireJs</em><em>使用</em></a> 
+                    <span>2018-02-23</span>
+                </li>
+                                     <li>
+                    <a title="RequireJs 的 使用" href="https://www.likecs.com/show-307195521.html" target="_blank"><em>RequireJs</em> 的 <em>使用</em></a> 
+                    <span>2022-01-17</span>
+                </li>
+                                     <li>
+                    <a title="requirejs使用" href="https://www.likecs.com/show-307383415.html" target="_blank"><em>requirejs</em><em>使用</em></a> 
+                    <span>2022-02-01</span>
+                </li>
+                                     <li>
+                    <a title="requirejs的使用" href="https://www.likecs.com/show-306032760.html" target="_blank"><em>requirejs</em>的<em>使用</em></a> 
+                    <span>2021-09-13</span>
+                </li>
+                                     <li>
+                    <a title="如何使用requirejs？" href="https://www.likecs.com/show-203696165.html" target="_blank">如何<em>使用</em><em>requirejs</em>？</a> 
+                    <span>2022-01-23</span>
+                </li>
+                                     <li>
+                    <a title="requireJS的使用_API（1）" href="https://www.likecs.com/show-306509923.html" target="_blank"><em>requireJS</em>的<em>使用</em>_API（1）</a> 
+                    <span>2021-10-12</span>
+                </li>
+                                     <li>
+                    <a title="使用RequireJs的好处" href="https://www.likecs.com/show-203464832.html" target="_blank"><em>使用</em><em>RequireJs</em>的好处</a> 
+                    <span>2021-08-25</span>
+                </li>
+                                     <li>
+                    <a title="在Dynamic Web TWAIN中使用 RequireJS" href="https://www.likecs.com/show-203898795.html" target="_blank">在Dynamic Web TWAIN中<em>使用</em> <em>RequireJS</em></a> 
+                    <span>2021-12-28</span>
+                </li>
+                                     <li>
+                    <a title="requirejs和seajs使用感受" href="https://www.likecs.com/show-306671507.html" target="_blank"><em>requirejs</em>和seajs<em>使用</em>感受</a> 
+                    <span>2021-06-04</span>
+                </li>
+                                     <li>
+                    <a title="[JS] 使用RequireJS引用UMeditor" href="https://www.likecs.com/show-306860438.html" target="_blank">[JS] <em>使用</em><em>RequireJS</em>引用UMeditor</a> 
+                    <span>2021-09-28</span>
+                </li>
+                                     <li>
+                    <a title="requireJS" href="https://www.likecs.com/show-306410095.html" target="_blank"><em>requireJS</em></a> 
+                    <span>2021-12-28</span>
+                </li>
+                            </ul>
+   </div><div style="height: auto;margin: 0px auto;background-color: #ddd;text-align: center;" class="carditem litem"><ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-5446233687289962" data-ad-slot="2607637140" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done" data-ad-status="filled"><div id="aswift_4_host" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none; height: 280px; width: 446px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block; overflow: visible;"><iframe id="aswift_4" name="aswift_4" style="left:0;position:absolute;top:0;border:0;width:446px;height:280px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="446" height="280" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" src="./RequireJS 使用详解 - 爱码网_files/ads(1).html" data-google-container-id="a!5" data-google-query-id="CID_s9nQ5voCFVSKwgode7MFMQ" data-load-complete="true"></iframe></div></ins></div>
+<div style="height: auto;" class="carditem litem">
+    <div class="cardtit">最近更新的文章/教程 <a class="cardmore" title="最近更新的文章/教程" href="https://www.likecs.com/default/index/morelist">更多</a></div>
+        <ul class="cardcont">
+                                 <li>
+                    <a title="dotnet 委托的实现解析（2）开放委托和封闭委托  (Open Delegates vs. Closed Delegates)" href="https://www.likecs.com/show-307456521.html" target="_blank">dotnet 委托的实现解析（2）开放委托和封闭委托  (Open Delegates vs. Closed Delegates)</a> 
+                    <span>2022-03-22</span>
+                </li>
+                                     <li>
+                    <a title="【工程应用五】 opencv中linemod模板匹配算法诸多疑惑和自我解读。" href="https://www.likecs.com/show-307456512.html" target="_blank">【工程应用五】 opencv中linemod模板匹配算法诸多疑惑和自我解读。</a> 
+                    <span>2022-03-21</span>
+                </li>
+                                     <li>
+                    <a title="简悦+Logseq 搭建本地化个人知识库" href="https://www.likecs.com/show-307456511.html" target="_blank">简悦+Logseq 搭建本地化个人知识库</a> 
+                    <span>2022-03-21</span>
+                </li>
+                                     <li>
+                    <a title="Django基础八之认证模块---auth" href="https://www.likecs.com/show-307456509.html" target="_blank">Django基础八之认证模块---auth</a> 
+                    <span>2022-03-21</span>
+                </li>
+                                     <li>
+                    <a title="Python  基础知识自检，离深入掌握 Python 还有多远" href="https://www.likecs.com/show-307456476.html" target="_blank">Python  基础知识自检，离深入掌握 Python 还有多远</a> 
+                    <span>2022-03-21</span>
+                </li>
+                                     <li>
+                    <a title="Ubuntu系统中防火墙的使用和开放端口" href="https://www.likecs.com/show-307456442.html" target="_blank">Ubuntu系统中防火墙的使用和开放端口</a> 
+                    <span>2022-03-21</span>
+                </li>
+                                     <li>
+                    <a title="【机器学习基础】无监督学习（2）——降维之LLE和TSNE" href="https://www.likecs.com/show-307456425.html" target="_blank">【机器学习基础】无监督学习（2）——降维之LLE和TSNE</a> 
+                    <span>2022-03-21</span>
+                </li>
+                                     <li>
+                    <a title="机器学习实战 | SKLearn最全应用指南" href="https://www.likecs.com/show-307456424.html" target="_blank">机器学习实战 | SKLearn最全应用指南</a> 
+                    <span>2022-03-21</span>
+                </li>
+                                     <li>
+                    <a title="python基础之序列类型的方法——字符串方法" href="https://www.likecs.com/show-307456412.html" target="_blank">python基础之序列类型的方法——字符串方法</a> 
+                    <span>2022-03-21</span>
+                </li>
+                                     <li>
+                    <a title="分布式 PostgreSQL 集群(Citus)，分布式表中的分布列选择***实践" href="https://www.likecs.com/show-307456385.html" target="_blank">分布式 PostgreSQL 集群(Citus)，分布式表中的分布列选择***实践</a> 
+                    <span>2022-03-21</span>
+                </li>
+                            </ul>
+   </div>
+   <div style="height: auto;background-color: #ddd;text-align: center;" class="carditem litem">
+    <ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-5446233687289962" data-ad-slot="2607637140" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done" data-ad-status="filled"><div id="aswift_1_host" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none; height: 280px; width: 446px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block; overflow: visible;"><iframe id="aswift_1" name="aswift_1" style="left:0;position:absolute;top:0;border:0;width:446px;height:280px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="446" height="280" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" src="./RequireJS 使用详解 - 爱码网_files/ads(2).html" data-google-container-id="a!2" data-google-query-id="CNmEtNnQ5voCFV7YTAIdQtoMqg" data-load-complete="true"></iframe></div></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div> 
+   <div style="height: auto;" class="carditem litem mt20">
+    <div class="cardtit">热门标签  </div>
+    <div class="tagbox">
+                    <a target="_blank" title="Java" href="https://www.likecs.com/default/index/tags?cid=164&amp;cname=Java">Java</a>
+                        <a target="_blank" title="Python" href="https://www.likecs.com/default/index/tags?cid=367&amp;cname=Python">Python</a>
+                        <a target="_blank" title="linux" href="https://www.likecs.com/default/index/tags?cid=274&amp;cname=linux">linux</a>
+                        <a target="_blank" title="javascript" href="https://www.likecs.com/default/index/tags?cid=169&amp;cname=javascript">javascript</a>
+                        <a target="_blank" title="Mysql" href="https://www.likecs.com/default/index/tags?cid=237&amp;cname=Mysql">Mysql</a>
+                        <a target="_blank" title="C#" href="https://www.likecs.com/default/index/tags?cid=187&amp;cname=C%23">C#</a>
+                        <a target="_blank" title="Docker" href="https://www.likecs.com/default/index/tags?cid=243&amp;cname=Docker">Docker</a>
+                        <a target="_blank" title="算法" href="https://www.likecs.com/default/index/tags?cid=344&amp;cname=%E7%AE%97%E6%B3%95">算法</a>
+                        <a target="_blank" title="Redis" href="https://www.likecs.com/default/index/tags?cid=227&amp;cname=Redis">Redis</a>
+                        <a target="_blank" title="SpringBoot" href="https://www.likecs.com/default/index/tags?cid=168&amp;cname=SpringBoot">SpringBoot</a>
+                        <a target="_blank" title="前端" href="https://www.likecs.com/default/index/tags?cid=160&amp;cname=%E5%89%8D%E7%AB%AF">前端</a>
+                        <a target="_blank" title="Vue" href="https://www.likecs.com/default/index/tags?cid=236&amp;cname=Vue">Vue</a>
+                        <a target="_blank" title="spring" href="https://www.likecs.com/default/index/tags?cid=696&amp;cname=spring">spring</a>
+                        <a target="_blank" title=".net core" href="https://www.likecs.com/default/index/tags?cid=381&amp;cname=.net+core">.net core</a>
+                        <a target="_blank" title="设计模式" href="https://www.likecs.com/default/index/tags?cid=632&amp;cname=%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F">设计模式</a>
+                        <a target="_blank" title="kubernetes" href="https://www.likecs.com/default/index/tags?cid=2179&amp;cname=kubernetes">kubernetes</a>
+                        <a target="_blank" title="js" href="https://www.likecs.com/default/index/tags?cid=159&amp;cname=js">js</a>
+                        <a target="_blank" title=".net" href="https://www.likecs.com/default/index/tags?cid=300&amp;cname=.net">.net</a>
+                        <a target="_blank" title="数据库" href="https://www.likecs.com/default/index/tags?cid=284&amp;cname=%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a>
+                        <a target="_blank" title="c++" href="https://www.likecs.com/default/index/tags?cid=312&amp;cname=c%2B%2B">c++</a>
+                        <a target="_blank" title="机器学习" href="https://www.likecs.com/default/index/tags?cid=171&amp;cname=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0">机器学习</a>
+                        <a target="_blank" title="Android" href="https://www.likecs.com/default/index/tags?cid=282&amp;cname=Android">Android</a>
+                        <a target="_blank" title="微服务" href="https://www.likecs.com/default/index/tags?cid=832&amp;cname=%E5%BE%AE%E6%9C%8D%E5%8A%A1">微服务</a>
+                        <a target="_blank" title="数据结构" href="https://www.likecs.com/default/index/tags?cid=247&amp;cname=%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>
+                        <a target="_blank" title="大数据" href="https://www.likecs.com/default/index/tags?cid=888&amp;cname=%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a>
+                        <a target="_blank" title="程序员" href="https://www.likecs.com/default/index/tags?cid=327&amp;cname=%E7%A8%8B%E5%BA%8F%E5%91%98">程序员</a>
+                        <a target="_blank" title="面试" href="https://www.likecs.com/default/index/tags?cid=637&amp;cname=%E9%9D%A2%E8%AF%95">面试</a>
+                        <a target="_blank" title="JVM" href="https://www.likecs.com/default/index/tags?cid=727&amp;cname=JVM">JVM</a>
+                        <a target="_blank" title="PHP" href="https://www.likecs.com/default/index/tags?cid=281&amp;cname=PHP">PHP</a>
+                        <a target="_blank" title="Go" href="https://www.likecs.com/default/index/tags?cid=839&amp;cname=Go">Go</a>
+                        <a target="_blank" title="git" href="https://www.likecs.com/default/index/tags?cid=226&amp;cname=git">git</a>
+                        <a target="_blank" title="ASP.net core" href="https://www.likecs.com/default/index/tags?cid=179&amp;cname=ASP.net+core">ASP.net core</a>
+                        <a target="_blank" title="CSS" href="https://www.likecs.com/default/index/tags?cid=817&amp;cname=CSS">CSS</a>
+                        <a target="_blank" title="后端" href="https://www.likecs.com/default/index/tags?cid=1089&amp;cname=%E5%90%8E%E7%AB%AF">后端</a>
+                        <a target="_blank" title="mybatis" href="https://www.likecs.com/default/index/tags?cid=720&amp;cname=mybatis">mybatis</a>
+                        <a target="_blank" title="k8s" href="https://www.likecs.com/default/index/tags?cid=5067&amp;cname=k8s">k8s</a>
+                        <a target="_blank" title="Nginx" href="https://www.likecs.com/default/index/tags?cid=373&amp;cname=Nginx">Nginx</a>
+                        <a target="_blank" title="爬虫" href="https://www.likecs.com/default/index/tags?cid=905&amp;cname=%E7%88%AC%E8%99%AB">爬虫</a>
+                        <a target="_blank" title="多线程" href="https://www.likecs.com/default/index/tags?cid=986&amp;cname=%E5%A4%9A%E7%BA%BF%E7%A8%8B">多线程</a>
+                        <a target="_blank" title="React" href="https://www.likecs.com/default/index/tags?cid=560&amp;cname=React">React</a>
+                        <a target="_blank" title="Django" href="https://www.likecs.com/default/index/tags?cid=634&amp;cname=Django">Django</a>
+                        <a target="_blank" title="Spring Boot" href="https://www.likecs.com/default/index/tags?cid=201&amp;cname=Spring+Boot">Spring Boot</a>
+                        <a target="_blank" title="golang" href="https://www.likecs.com/default/index/tags?cid=409&amp;cname=golang">golang</a>
+                        <a target="_blank" title="云计算" href="https://www.likecs.com/default/index/tags?cid=361&amp;cname=%E4%BA%91%E8%AE%A1%E7%AE%97">云计算</a>
+                        <a target="_blank" title="容器" href="https://www.likecs.com/default/index/tags?cid=244&amp;cname=%E5%AE%B9%E5%99%A8">容器</a>
+                        <a target="_blank" title="分布式" href="https://www.likecs.com/default/index/tags?cid=205&amp;cname=%E5%88%86%E5%B8%83%E5%BC%8F">分布式</a>
+                        <a target="_blank" title="devops" href="https://www.likecs.com/default/index/tags?cid=2662&amp;cname=devops">devops</a>
+                        <a target="_blank" title="架构" href="https://www.likecs.com/default/index/tags?cid=2070&amp;cname=%E6%9E%B6%E6%9E%84">架构</a>
+                        <a target="_blank" title="云原生" href="https://www.likecs.com/default/index/tags?cid=22056&amp;cname=%E4%BA%91%E5%8E%9F%E7%94%9F">云原生</a>
+                        <a target="_blank" title="hadoop" href="https://www.likecs.com/default/index/tags?cid=461&amp;cname=hadoop">hadoop</a>
+                </div>
+       
+   </div>
+   <div style="height: auto;" class="carditem litem mt20">
+    <div class="cardtit">常用小工具 <a class="cardmore" title="常用小工具" href="https://www.likecs.com/show-204296329.html?sc=2360">更多</a></div>
+        <ul class="cardcont">
+                                                <li>
+                    <a title="JSON格式美化工具" href="https://www.likecs.com/tools-2.html" target="_blank">JSON格式美化工具</a>
+
+                </li>
+                                                  <li>
+                    <a title="在线XML转JSON/JSON转XML工具" href="https://www.likecs.com/tools-3.html" target="_blank">在线XML转JSON/JSON转XML工具</a>
+
+                </li>
+                                                  <li>
+                    <a title="JSON格式化编辑和美化工具" href="https://www.likecs.com/tools-4.html" target="_blank">JSON格式化编辑和美化工具</a>
+
+                </li>
+                                                  <li>
+                    <a title="密码安全性在线检测" href="https://www.likecs.com/tools-5.html" target="_blank">密码安全性在线检测</a>
+
+                </li>
+                                                  <li>
+                    <a title="在线计算器" href="https://www.likecs.com/tools-6.html" target="_blank">在线计算器</a>
+
+                </li>
+                                                  <li>
+                    <a title="在线高级科学计算器" href="https://www.likecs.com/tools-7.html" target="_blank">在线高级科学计算器</a>
+
+                </li>
+                                                  <li>
+                    <a title="贷款计算器/房贷计算器" href="https://www.likecs.com/tools-8.html" target="_blank">贷款计算器/房贷计算器</a>
+
+                </li>
+                                                  <li>
+                    <a title="在线RGB、HEX颜色代码生成器" href="https://www.likecs.com/tools-9.html" target="_blank">在线RGB、HEX颜色代码生成器</a>
+
+                </li>
+                                                  <li>
+                    <a title="在线WEB安全色查询工具" href="https://www.likecs.com/tools-10.html" target="_blank">在线WEB安全色查询工具</a>
+
+                </li>
+                                                  <li>
+                    <a title="网页颜色搭配表及颜色搭配技巧" href="https://www.likecs.com/tools-11.html" target="_blank">网页颜色搭配表及颜色搭配技巧</a>
+
+                </li>
+                                              </ul>
+   </div> 
+        <div id="rightadbox" style="height: auto !important; background-color: rgb(221, 221, 221); text-align: center; top: 0px; width: 446px; left: 750.802px;" class="carditem litem fexd">
+            <ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-5446233687289962" data-ad-slot="2607637140" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done" data-ad-status="filled"><div id="aswift_2_host" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none; height: 280px; width: 446px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block; overflow: visible;"><iframe id="aswift_2" name="aswift_2" style="left:0;position:absolute;top:0;border:0;width:446px;height:280px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="446" height="280" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" src="./RequireJS 使用详解 - 爱码网_files/ads(3).html" data-google-container-id="a!3" data-google-query-id="CIOjtNnQ5voCFQ18iwod9tgDUQ" data-load-complete="true"></iframe></div></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div> 
+</div>
+<div class="clearfix"></div>
+</main>
+    <div class="yllinks alink"></div> 
+
+<footer class="site-footer clearfix">
+
+    <section class="copyright">By © 2022 <a href="https://www.likecs.com/" title="www.likecs.com">likecs</a> 版权所有,<br>本站所有数据收集于网络如有侵犯到您的权益请联系zengyin969@gmail.com进行下架处理。 </section>
+    <section class="poweredby">  <a target="_blank" href="https://beian.miit.gov.cn/">粤ICP备12038626号</a>  
+	<script charset="UTF-8" id="LA_COLLECT" src="./RequireJS 使用详解 - 爱码网_files/js-sdk-pro.min.js.下载"></script><script>LA.init({id: 'Je3PjbvUssp6BbvY',ck: 'Je3PjbvUssp6BbvY'})</script>  Powered By  WordPress </section>
+	
+</footer>  
+</div>
+<script>
+    $(function(){
+        $(".post-content").append('<p style="padding: 20px;color: #cacaca;">原文链接：来源网络，如有侵犯到您的权益请联系zengyin969@gmail.com进行下架处理</p>')  
+    }) 
+</script> 
+
+<div><a href="https://u.jd.com/7LuNHQc" id="redirect_url"></a><a href="https://www.likecs.com/show-204296329.html?sc=2360" id="redirect_url2" target="_blank"></a></div><script type="text/javascript" async="" src="./RequireJS 使用详解 - 爱码网_files/f(7).txt" data-checked-head="true"></script><ins class="adsbygoogle adsbygoogle-noablate" data-adsbygoogle-status="done" style="display: none !important;" data-ad-status="unfilled"><div id="aswift_0_host" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none; height: 0px; width: 0px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;"><iframe id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;border:0;width:undefinedpx;height:undefinedpx;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" src="./RequireJS 使用详解 - 爱码网_files/ads(4).html" data-google-container-id="a!1" data-load-complete="true"></iframe></div></ins><iframe src="./RequireJS 使用详解 - 爱码网_files/aframe.html" width="0" height="0" style="display: none;"></iframe></body><iframe id="google_esf" name="google_esf" src="./RequireJS 使用详解 - 爱码网_files/zrt_lookup.html" style="display: none;"></iframe></html>
