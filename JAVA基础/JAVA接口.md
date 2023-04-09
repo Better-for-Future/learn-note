@@ -1,0 +1,2 @@
+- 成员变量只能是 public static final 类型的常量【默认】
+- 
