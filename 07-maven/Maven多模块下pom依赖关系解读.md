@@ -1,26 +1,7 @@
-Maven多模块下pom依赖关系解读
+# Maven多模块下pom依赖关系解读
 
-静笃塾
 
-于 2022-10-25 22:24:16 发布
 
-545
- 收藏
-分类专栏： maven Java 编程基础 文章标签： spring boot spring java
-版权
-
-maven
-同时被 3 个专栏收录
-2 篇文章0 订阅
-订阅专栏
-
-Java
-11 篇文章0 订阅
-订阅专栏
-
-编程基础
-12 篇文章0 订阅
-订阅专栏
  Maven采取多模块进行开发，父子模块的传递关系，及各个参数的说明
 
 包括：
@@ -142,5 +123,4 @@ Java
 [maven pom](https://blog.csdn.net/TNT_D/article/details/105081988)
 
 [maven pom another](https://www.jianshu.com/p/38a41b3b9862)
-
 
